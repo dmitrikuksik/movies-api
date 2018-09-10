@@ -1,13 +1,13 @@
 from django.conf import settings
 from rest_framework import serializers
-from .models import Movie
+from .models import Movie, Comment
 import requests
 
 class MovieTitleSerializer(serializers.Serializer):
-    title = serializers.CharField()
-
     movie_data = {}
     is_exist = False
+    
+    title = serializers.CharField()
 
     def validate_title(self, title):
         self.movie_data = settings.OMDB_CLIENT.get(title=title,
@@ -36,7 +36,11 @@ class MovieSerializer(serializers.ModelSerializer):
         model = Movie
         fields = '__all__'
 
-                                                
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = '__all__'        
 
 
 
