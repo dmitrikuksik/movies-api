@@ -1,10 +1,13 @@
 import os
+from omdb import OMDBClient
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = os.environ.get('SECRET_KEY', '')
 
 OMDB_API_KEY = os.environ.get('OMDB_API_KEY', '')
+
+OMDB_CLIENT = OMDBClient(apikey=OMDB_API_KEY)
 
 DEBUG = True
 
@@ -89,6 +92,14 @@ USE_L10N = False
 
 USE_TZ = True
 
-# DATE_FORMAT = '%d %b %Y'
-
 STATIC_URL = '/static/'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+    )
+}
