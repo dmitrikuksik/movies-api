@@ -32,19 +32,16 @@ class Movies(APIView):
         else:
             if not request.query_params:
                 movies = Movie.objects.all()
-                serializer = MovieSerializer(movies,many=True)
             else:
                 order_by = request.query_params.get('order_by',None)
                 year = request.query_params.get('year',None)
                 if order_by and year:
                     movies = Movie.objects.filter(data__year=year).order_by(order_by)
-                    serializer = MovieSerializer(movies,many=True)
+                    
                 elif order_by:
                     movies = Movie.objects.all().order_by(order_by)
-                    serializer = MovieSerializer(movies,many=True)
                 elif year:
                     movies = Movie.objects.filter(data__year=year)
-                    serializer = MovieSerializer(movies,many=True)
                 else:
                     return Response(
                         status=status.HTTP_400_BAD_REQUEST,
@@ -60,6 +57,7 @@ class Movies(APIView):
                         status=status.HTTP_400_BAD_REQUEST,
                         data={"error":"Something went wrong."}
                         )
+            serializer = MovieSerializer(movies,many=True)
 
         return Response(
                 status=status.HTTP_200_OK,
