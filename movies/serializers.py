@@ -1,7 +1,9 @@
 from django.conf import settings
+from django.contrib.postgres.search import SearchVector
+
 from rest_framework import serializers
 from .models import Movie, Comment
-import requests
+import json
 
 class MovieTitleSerializer(serializers.Serializer):
     movie_data = {}
