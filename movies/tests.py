@@ -83,8 +83,83 @@ class MovieTestCase(TestCase):
             movie_id,
             response.data['movie_id']
         )
-
     
+    def test_movie_get_year(self):
+        titles = [ "Titanic", "Fight Club"]
+        for title in titles:
+            data = json.dumps({"title": title})
+            self.client.post(
+                '/movies/',
+                data,
+                content_type="application/json",
+                )
+        
+        year = "1997"
+        url = '/movies/?year={}/'.format(year)
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            Movie.objects.filter(data__year=year).count(),
+            len(response.data)
+        )
+
+    def test_movie_get_order_by(self):
+        titles = [ "Titanic", "Fight Club","Atlas"]
+        for title in titles:
+            data = json.dumps({"title": title})
+            self.client.post(
+                '/movies/',
+                data,
+                content_type="application/json",
+                )
+        
+        order_by = "data__title"
+        url = '/movies/?order_by={}'.format(order_by)
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            Movie.objects.get(data__title=titles[2]).movie_id,
+            response.data[0]['movie_id']
+        )
+
+    def test_movie_get_order_by_and_year(self):
+        titles = [ "Deadpool 2", "Black Panther", "Titanic"]
+        for title in titles:
+            data = json.dumps({"title": title})
+            self.client.post(
+                '/movies/',
+                data,
+                content_type="application/json",
+                )
+        
+        order_by = "data__title"
+        year = "2018"
+        url = '/movies/?order_by={}&year={}'.format(order_by,year)
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            Movie.objects.filter(data__year=year).count(),
+            len(response.data)
+        )
+        self.assertEqual(
+            Movie.objects.get(data__title=titles[1]).movie_id,
+            response.data[0]['movie_id']
+        )
+
+class CommentTestCase(TestCase):
+
+    def test_comment_post_correct(self):
+        pass
+
+        
+
+
+
 
 
         
