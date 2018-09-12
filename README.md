@@ -8,7 +8,7 @@ PostgreSQL was chosen, because of it's ability to store JSON objects.
 POST JSON {"title":"Movie Name"}  /movies/ - add movie to DB 
 
 GET /movies/ - fetch all movies existing in DB
-GET /movies/{movie_id}/ - fetch movie with specified ID
+GET /movies/{movie_id}/ - fetch movie with specified ID \n
 GET /movies/?order_by={field_to_order} - sorting movies in DB by specified field. 
 
 Available fields: movie_id, data__{field_from_external_api_response} (ex. data__title)
