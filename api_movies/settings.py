@@ -3,7 +3,7 @@ from omdb import OMDBClient
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = os.environ.get('SECRET_KEY', '')
+SECRET_KEY = SECRET_KEY = 'hmq_!-qpk(g%+h%!ds9#k215^%@9d^ofn*v8f#infp7aq6(hyb'
 
 OMDB_API_KEY = os.environ.get('OMDB_API_KEY', '')
 
@@ -128,7 +128,6 @@ if os.getcwd() == '/app':
         'default': dj_database_url.config(default='postgres://localhost')
     }
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    SECRET_KEY = 'hmq_!-qpk(g%+h%!ds9#k215^%@9d^ofn*v8f#infp7aq6(hyb'
 
     OMDB_API_KEY = '1ccec3b6'
 
