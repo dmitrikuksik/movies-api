@@ -1,11 +1,12 @@
 A basic movie database interacting with external API using Django, DRF and PostgreSQL.
 PostgreSQL was chosen, because of it's ability to store JSON objects.
 
-Heroku link: https://afternoon-mesa-86810.herokuapp.com/
+**Heroku link**: https://afternoon-mesa-86810.herokuapp.com/
 
-Available endpoints:
+**Available endpoints:**
 
-POST JSON {"title":"Movie Name"} /movies/ - add movie to DB 
+POST JSON {"title":"Movie Name"}  /movies/ - add movie to DB 
+
 GET /movies/ - fetch all movies existing in DB
 GET /movies/{movie_id}/ - fetch movie with specified ID
 GET /movies/?order_by={field_to_order} - sorting movies in DB by specified field. 
@@ -15,11 +16,11 @@ Available fields: movie_id, data__{field_from_external_api_response} (ex. data__
 GET /movies/?year={year} - filter movies by specified year 
 GET /movies/?year={year}&order_by={field_to_order} - filter movies by specified year and sorting by specified field 
 
-POST JSON {"movie_id":"Movie ID", "text":"Comment text"} /comments/ - add comment for movie
+POST JSON {"movie_id":"Movie ID", "text":"Comment text"}  /comments/ - add comment for movie
 GET /comments/ - fetch all comments existing in DB
 GET /comments/{movie_id}/ -fetch all comments connected with specified movie_id
 
-Installing:
+**Installing:**
 
 1. git clone https://github.com/dmitrikuksik/movies-api.git
 
