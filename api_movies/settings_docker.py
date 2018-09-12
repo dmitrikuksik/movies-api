@@ -9,9 +9,9 @@ OMDB_API_KEY = os.environ.get('OMDB_API_KEY', '')
 
 OMDB_CLIENT = OMDBClient(apikey=OMDB_API_KEY)
 
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -57,15 +57,11 @@ WSGI_APPLICATION = 'api_movies.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('DB_NAME', ''), 
-        'USER': os.environ.get('DB_USER', ''),
-        'PASSWORD': os.environ.get('DB_PASSWORD',''),
-        'HOST': 'localhost',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres', 
+        'USER': 'postgres',
+        'HOST': 'db',
         'PORT': '5432',
-        'TEST': {
-            'NAME': os.environ.get('DB_TEST_NAME', ''),
-        }
     }
 }
 
