@@ -1,7 +1,7 @@
 A basic movie database interacting with external API using Django, DRF and PostgreSQL.
 PostgreSQL was chosen, because of it's ability to store JSON objects.
 
-**Heroku link**: https://afternoon-mesa-86810.herokuapp.com/
+**Heroku link**: https://afternoon-mesa-86810.herokuapp.com/movies/
 
 **Available endpoints:**
 
