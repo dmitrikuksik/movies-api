@@ -124,6 +124,23 @@ class MovieTestCase(TestCase):
             Movie.objects.get(data__title=titles[2]).movie_id,
             response.data[0]['movie_id']
         )
+    
+    def test_movie_get_order_by_field_not_exist(self):
+        titles = [ "Titanic", "Fight Club","Atlas"]
+        for title in titles:
+            data = json.dumps({"title": title})
+            self.client.post(
+                '/movies/',
+                data,
+                content_type="application/json",
+                )
+        
+        order_by = "field_not_exist"
+        url = '/movies/?order_by={}'.format(order_by)
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 400)
 
     def test_movie_get_order_by_and_year(self):
         titles = [ "Deadpool 2", "Black Panther", "Titanic"]
@@ -150,6 +167,23 @@ class MovieTestCase(TestCase):
             Movie.objects.get(data__title=titles[1]).movie_id,
             response.data[0]['movie_id']
         )
+
+    def test_comment_get_query_not_exist(self):
+        titles = [ "Deadpool 2", "Black Panther", "Titanic"]
+        for title in titles:
+            data = json.dumps({"title": title})
+            self.client.post(
+                '/movies/',
+                data,
+                content_type="application/json",
+                )
+        
+        query = 'some_value'
+        url = '/movies/?query_not_exist={}'.format(query)
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 400)
 
 class CommentTestCase(TestCase):
 
@@ -204,10 +238,11 @@ class CommentTestCase(TestCase):
         for title in titles:
             data = json.dumps({"title": title})
             self.client.post(
-                '/movies/',
-                data,
-                content_type="application/json",
+                    '/movies/',
+                    data,
+                    content_type="application/json",
                 )
+        
         for title in titles:
             movie_id = Movie.objects.get(data__title=title).movie_id
             texts = ["Funny!", "This is awesome :)", "Waiting for next part"]
@@ -216,10 +251,10 @@ class CommentTestCase(TestCase):
                     "movie_id": movie_id,
                     "text": text
                 })
-                response = self.client.post(
-                    '/comments/',
-                    data,
-                    content_type="application/json",
+                self.client.post(
+                        '/comments/',
+                        data,
+                        content_type="application/json",
                     )
         
         response = self.client.get('/comments/')
@@ -233,10 +268,10 @@ class CommentTestCase(TestCase):
         titles = [ "Deadpool 2", "Black Panther"]
         for title in titles:
             data = json.dumps({"title": title})
-            self.client.post(
-                '/movies/',
-                data,
-                content_type="application/json",
+                self.client.post(
+                    '/movies/',
+                    data,
+                    content_type="application/json",
                 )
         for title in titles:
             movie_id = Movie.objects.get(data__title=title).movie_id
@@ -246,10 +281,10 @@ class CommentTestCase(TestCase):
                     "movie_id": movie_id,
                     "text": text
                 })
-                response = self.client.post(
-                    '/comments/',
-                    data,
-                    content_type="application/json",
+                elf.client.post(
+                        '/comments/',
+                        data,
+                        content_type="application/json",
                     )
         movie_id = Movie.objects.get(data__title=titles[0]).movie_id
         url = '/comments/{}/'.format(movie_id)
@@ -259,7 +294,7 @@ class CommentTestCase(TestCase):
         self.assertEqual(
             Comment.objects.filter(movie_id=movie_id).count(),
             len(response.data)
-        )       
+        ) 
 
 
 
