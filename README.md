@@ -13,7 +13,8 @@ GET /movies/?order_by={field_to_order} - sorting movies in DB by specified field
 
 Available fields: movie_id, data__{field_from_external_api_response} (ex. data__title)
 
-GET /movies/?year={year} - filter movies by specified year 
+GET /movies/?year={year} - filter movies by specified year
+
 GET /movies/?year={year}&order_by={field_to_order} - filter movies by specified year and sorting by specified field 
 
 POST JSON {"movie_id":"Movie ID", "text":"Comment text"}  /comments/ - add comment for movie
