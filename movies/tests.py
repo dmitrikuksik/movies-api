@@ -213,9 +213,3 @@ class CommentTestCase(TestCase):
             Comment.objects.filter(movie_id=movie_id).count(),
             len(response.data)
         ) 
-
-
-
-        
-
-
