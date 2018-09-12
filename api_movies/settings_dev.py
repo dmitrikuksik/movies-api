@@ -117,6 +117,11 @@ if os.getcwd() == '/app':
         'default': dj_database_url.config(default='postgres://localhost')
     }
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECRET_KEY = 'hmq_!-qpk(g%+h%!ds9#k215^%@9d^ofn*v8f#infp7aq6(hyb'
+
+    OMDB_API_KEY = '1ccec3b6'
+
+    OMDB_CLIENT = OMDBClient(apikey=OMDB_API_KEY)
     ALLOWED_HOSTS = ['*']
     DEBUG = False
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
