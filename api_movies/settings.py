@@ -56,6 +56,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'api_movies.wsgi.application'
 
 if os.environ.get('DJANGO_SETTINGS_MODE', '') == 'DOCKER':
+    ALLOWED_HOSTS = ['*']
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
