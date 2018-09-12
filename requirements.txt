@@ -1,10 +1,13 @@
 cached-property==1.5.1
 certifi==2018.8.24
 chardet==3.0.4
+dj-database-url==0.5.0
+dj-static==0.0.6
 Django==2.1.1
 django-filter==2.0.0
 djangorestframework==3.8.2
 enum-compat==0.0.2
+gunicorn==19.9.0
 idna==2.7
 Markdown==2.6.11
 omdb==0.10.0
@@ -12,4 +15,5 @@ psycopg2==2.7.5
 pytz==2018.5
 requests==2.19.1
 six==1.11.0
+static3==0.7.0
 urllib3==1.23
