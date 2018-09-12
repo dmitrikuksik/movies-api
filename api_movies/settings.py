@@ -3,7 +3,7 @@ from omdb import OMDBClient
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = SECRET_KEY = 'hmq_!-qpk(g%+h%!ds9#k215^%@9d^ofn*v8f#infp7aq6(hyb'
+SECRET_KEY = 'hmq_!-qpk(g%+h%!ds9#k215^%@9d^ofn*v8f#infp7aq6(hyb'
 
 OMDB_API_KEY = '1ccec3b6'
 
