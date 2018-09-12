@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import Movie
+from .models import Movie, Comment
 import json
 
 
@@ -154,10 +154,80 @@ class MovieTestCase(TestCase):
 class CommentTestCase(TestCase):
 
     def test_comment_post_correct(self):
-        pass
+        title = "Titanic"
+        data = json.dumps({"title": title})
+        response = self.client.post(
+            '/movies/',
+            data,
+            content_type="application/json",
+            )
 
+        movie_id = Movie.objects.get(data__title=title).movie_id
+        text = "The best movie ever!"
+        data = json.dumps({
+            "movie_id": movie_id,
+            "text": text
+        })
+        response = self.client.post(
+            '/comments/',
+            data,
+            content_type="application/json",
+            )
+
+        self.assertEqual(response.status_code,200)
+        self.assertEqual(
+            Comment.objects.filter(text=text).count(),
+            1
+        )
+
+    def test_comment_post_incorrect(self):
+        movie_id = 0
+        text = "The best movie ever!"
+        data = json.dumps({
+            "movie_id": movie_id,
+            "text": text
+        })
+        response = self.client.post(
+            '/comments/',
+            data,
+            content_type="application/json",
+            )
+
+        self.assertEqual(response.status_code,400)
+        self.assertEqual(
+            Comment.objects.all().count(),
+            0
+        )
+
+    def test_comment_get(self):
+        titles = [ "Deadpool 2", "Black Panther", "Titanic"]
+        for title in titles:
+            data = json.dumps({"title": title})
+            self.client.post(
+                '/movies/',
+                data,
+                content_type="application/json",
+                )
+
+        movie_id = Movie.objects.get(data__title=titles[0]).movie_id
+        texts = ["Funny!", "This is awesome :)", "Waiting for next part"]
+        for text in texts:
+            data = json.dumps({
+                "movie_id": movie_id,
+                "text": text
+            })
+            response = self.client.post(
+                '/comments/',
+                data,
+                content_type="application/json",
+                )
         
-
+        response = self.client.get('/comments/')
+        self.assertEqual(response.status_code,200)
+        self.assertEqual(
+            Comment.objects.all().count(),
+            len(response.data)
+        )
 
 
 
