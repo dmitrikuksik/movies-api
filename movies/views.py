@@ -1,11 +1,10 @@
-from django.shortcuts import render
-
-from .serializers import MovieTitleSerializer, MovieSerializer, CommentSerializer
+from .serializers import *
 from .models import Movie, Comment
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+
 
 class Movies(APIView):
 
@@ -17,27 +16,28 @@ class Movies(APIView):
             return Response(
                 status=status.HTTP_200_OK,
                 data=serializer.data
-                )
+            )
 
     def get(self, request, format='JSON', **kwargs):
-        movie_id = kwargs.get('movie_id',None)
+        movie_id = kwargs.get('movie_id', None)
         if movie_id:
             try:
                 movie = Movie.objects.get(movie_id=movie_id)
                 serializer = MovieSerializer(movie)
             except:
                 return Response(
-                    status=status.HTTP_200_OK,
-                    data={"data":"There are no movie for this request."})
+                    status=status.HTTP_404_NOT_FOUND,
+                )
         else:
             if not request.query_params:
                 movies = Movie.objects.all()
             else:
-                order_by = request.query_params.get('order_by',None)
-                year = request.query_params.get('year',None)
+                order_by = request.query_params.get('order_by', None)
+                year = request.query_params.get('year', None)
                 if order_by and year:
-                    movies = Movie.objects.filter(data__year=year).order_by(order_by)
-                    
+                    movies = Movie.objects.filter(
+                        data__year=year
+                    ).order_by(order_by)
                 elif order_by:
                     movies = Movie.objects.all().order_by(order_by)
                 elif year:
@@ -45,27 +45,25 @@ class Movies(APIView):
                 else:
                     return Response(
                         status=status.HTTP_400_BAD_REQUEST,
-                        data={"error":"Something went wrong."}
-                        )
-                try:
-                    if not movies:
-                        return Response(
-                            status=status.HTTP_200_OK,
-                            data={"data":"There are no movie for this request."})
-                except:
-                    return Response(
-                        status=status.HTTP_400_BAD_REQUEST,
-                        data={"error":"Something went wrong."}
-                        )
-            serializer = MovieSerializer(movies,many=True)
-
-        return Response(
-                status=status.HTTP_200_OK,
-                data=serializer.data
+                        data={
+                            "error": "Something went wrong."
+                        })
+            try:
+                serializer = MovieSerializer(movies, many=True)
+                return Response(
+                        status=status.HTTP_200_OK,
+                        data=serializer.data
                 )
+            except:
+                return Response(
+                    status=status.HTTP_400_BAD_REQUEST,
+                    data={
+                        "error": "Something went wrong."
+                    })
+
 
 class Comments(APIView):
-    
+
     def post(self, request, format='JSON'):
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
@@ -73,20 +71,22 @@ class Comments(APIView):
             serializer = CommentSerializer(comment)
             return Response(
                 status=status.HTTP_200_OK,
-                data={"text":serializer.data['text']}
-                )
+                data={
+                    "text": serializer.data['text']
+                })
 
     def get(self, request, format='JSON', **kwargs):
         movie_id = kwargs.get('movie_id', None)
         if movie_id:
+            try:
+                movie = Movie.objects.get(movie_id=movie_id)
+            except:
+                return Response(
+                    status=status.HTTP_404_NOT_FOUND,
+                )
             comments = Comment.objects.filter(movie_id=movie_id)
         else:
             comments = Comment.objects.all()
-        if not comments:
-            return Response(
-                status=status.HTTP_200_OK,
-                data={"data":"There are no comments for this request."}
-                )
         serializer = CommentSerializer(
                         comments,
                         many=True
@@ -95,7 +95,3 @@ class Comments(APIView):
             status=status.HTTP_200_OK,
             data=serializer.data
         )
-        
-    
-        
-        
