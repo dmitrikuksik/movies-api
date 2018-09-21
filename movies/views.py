@@ -1,5 +1,6 @@
 from .serializers import *
 from .models import Movie, Comment
+from .filters import MovieFilter
 
 from rest_framework.response import Response
 from rest_framework import status, viewsets, mixins
@@ -68,6 +69,8 @@ class MovieViewSet(mixins.ListModelMixin,
                    viewsets.GenericViewSet):
 
     queryset = Movie.objects.all().order_by('movie_id')
+    filter_backends = (DjangoFilterBackend,)
+    filter_class = MovieFilter
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
