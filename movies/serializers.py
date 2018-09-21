@@ -4,9 +4,9 @@ from .models import Movie, Comment
 
 
 class MovieTitleSerializer(serializers.Serializer):
-    movie_data = {}
-    is_exist = False
     title = serializers.CharField()
+
+    movie_data = {}
 
     def validate_title(self, title):
         self.movie_data = settings.OMDB_CLIENT.get(
@@ -22,20 +22,19 @@ class MovieTitleSerializer(serializers.Serializer):
         exist = Movie.objects.filter(
             data__title=self.movie_data['title']
         ).first()
+
         if exist:
-            self.is_exist = True
+            self.instance = exist
             return exist.data['title']
 
         return self.movie_data['title']
 
-    def save(self):
-        if not self.is_exist:
-            movie = Movie.objects.create(data=self.movie_data)
-            movie.save()
-        else:
-            movie = Movie.objects.filter(
-                data__title=self.validated_data['title']
-            ).first()
+    def update(self, instance, validated_data):
+        return instance
+
+    def create(self, validated_data):
+        movie = Movie.objects.create(data=self.movie_data)
+        movie.save()
         return movie
 
 
