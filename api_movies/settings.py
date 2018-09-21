@@ -55,6 +55,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'api_movies.wsgi.application'
 
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS':
+        ('django_filters.rest_framework.DjangoFilterBackend',)
+}
+
 if os.environ.get('DJANGO_SETTINGS_MODE', '') == 'DOCKER':
     ALLOWED_HOSTS = ['*']
     DATABASES = {

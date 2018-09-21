@@ -1,9 +1,9 @@
 from .serializers import *
 from .models import Movie, Comment
 
-from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, viewsets, mixins
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 # class Movies(APIView):
@@ -88,41 +88,9 @@ class MovieViewSet(mixins.ListModelMixin,
 
 class CommentViewSet(mixins.ListModelMixin,
                      mixins.CreateModelMixin,
-                     mixins.RetrieveModelMixin,
                      viewsets.GenericViewSet):
 
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-
-
-    # def post(self, request, format='JSON'):
-    #     serializer = CommentSerializer(data=request.data)
-    #     if serializer.is_valid(raise_exception=True):
-    #         comment = serializer.save()
-    #         serializer = CommentSerializer(comment)
-    #         return Response(
-    #             status=status.HTTP_200_OK,
-    #             data={
-    #                 "text": serializer.data['text']
-    #             })
-
-    # def get(self, request, format='JSON', **kwargs):
-    #     movie_id = kwargs.get('movie_id', None)
-    #     if movie_id:
-    #         try:
-    #             movie = Movie.objects.get(movie_id=movie_id)
-    #         except:
-    #             return Response(
-    #                 status=status.HTTP_404_NOT_FOUND,
-    #             )
-    #         comments = Comment.objects.filter(movie_id=movie_id)
-    #     else:
-    #         comments = Comment.objects.all()
-    #     serializer = CommentSerializer(
-    #                     comments,
-    #                     many=True
-    #                     )
-    #     return Response(
-    #         status=status.HTTP_200_OK,
-    #         data=serializer.data
-    #     )
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('movie_id',)
