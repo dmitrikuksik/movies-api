@@ -1,6 +1,7 @@
 from django.conf import settings
 from rest_framework import serializers
 from .models import Movie, Comment
+from omdb.omdb import OMDBClient
 
 
 class MovieTitleSerializer(serializers.Serializer):
@@ -9,16 +10,7 @@ class MovieTitleSerializer(serializers.Serializer):
     movie_data = {}
 
     def validate_title(self, title):
-        self.movie_data = settings.OMDB_CLIENT.get(
-            title=title,
-            fullplot=True,
-            tomatoes=False
-        )
-        if not self.movie_data:
-            raise serializers.ValidationError(
-                "Movie with such title doesn't exist."
-            )
-
+        self.movie_data = OMDBClient().get_data_by_title(title)
         exist = Movie.objects.filter(
             data__title=self.movie_data['title']
         ).first()

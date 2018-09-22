@@ -1,13 +1,10 @@
 import os
-from omdb import OMDBClient
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = 'hmq_!-qpk(g%+h%!ds9#k215^%@9d^ofn*v8f#infp7aq6(hyb'
 
 OMDB_API_KEY = '1ccec3b6'
-
-OMDB_CLIENT = OMDBClient(apikey=OMDB_API_KEY)
 
 DEBUG = True
 
@@ -54,11 +51,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'api_movies.wsgi.application'
-
-REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS':
-        ('django_filters.rest_framework.DjangoFilterBackend',)
-}
 
 if os.environ.get('DJANGO_SETTINGS_MODE', '') == 'DOCKER':
     ALLOWED_HOSTS = ['*']
@@ -117,7 +109,11 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PARSER_CLASSES': (
         'rest_framework.parsers.JSONParser',
-    )
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+    'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler',
 }
 
 
