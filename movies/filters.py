@@ -10,7 +10,7 @@ class MovieFilter(django_filters.FilterSet):
         field_name='data__country'
     )
     imdb_rating = django_filters.CharFilter(
-        field_name='data__imdb_rating'
+        field_name='data__imdbrating'
     )
 
     class Meta:

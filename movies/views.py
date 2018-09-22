@@ -13,8 +13,8 @@ class MovieViewSet(mixins.ListModelMixin,
                    viewsets.GenericViewSet):
 
     queryset = Movie.objects.all().order_by('movie_id')
-    filter_backends = (DjangoFilterBackend,)
     filter_class = MovieFilter
+    ordering_fields = ('movie_id', 'data__year', 'data__imdbrating')
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
@@ -37,7 +37,8 @@ class MovieViewSet(mixins.ListModelMixin,
             request.query_params and
             not request.query_params.get('year') and
             not request.query_params.get('country') and
-            not request.query_params.get('imdb_rating')
+            not request.query_params.get('imdb_rating') and
+            not request.query_params.get('ordering')
         ):
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
@@ -60,5 +61,4 @@ class CommentViewSet(mixins.ListModelMixin,
 
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    filter_backends = (DjangoFilterBackend,)
     filter_fields = ('movie_id',)
