@@ -1,6 +1,31 @@
 from django.test import TestCase
 from .models import Movie, Comment
+from .utils import OMDBClient
+from .helps import OMDB_MOVIE_DATA, PREPROCESSED_MOVIE_DATA
+from unittest import mock
 import json
+
+
+class OMDBTestCase(TestCase):
+
+    @mock.patch('requests.get')
+    def test_get_data_by_title_correct(self, mock_get):
+        mock_response = mock.Mock()
+        expected_data = OMDB_MOVIE_DATA
+
+        mock_response.json.return_value = expected_data
+        mock_response.status_code = 200
+
+        mock_get.return_value = mock_response
+
+        response_data = OMDBClient().get_data_by_title(
+            title='Titanic'
+        )
+
+        self.assertEqual(
+            response_data,
+            PREPROCESSED_MOVIE_DATA
+        )
 
 
 class MovieTestCase(TestCase):
@@ -15,6 +40,15 @@ class MovieTestCase(TestCase):
             )
         return response
 
+    @mock.patch('movies.utils')
+    def test_movie_post_omdb_api(self, mock_utils):
+        mock_client = mock_utils.OMDBClient()
+        mock_client.get_data_by_title.return_value = PREPROCESSED_MOVIE_DATA
+
+        movie_data = mock_client.get_data_by_title('Titanic')
+
+        mock_client.get_data_by_title.assert_called_once_with('Titanic')
+
     def test_movie_post_correct(self):
         response = self.post_movie(["Titanic"])
         self.assertEqual(response.status_code, 200)
@@ -25,7 +59,7 @@ class MovieTestCase(TestCase):
 
     def test_movie_post_incorrect(self):
         response = self.post_movie(["Titanic film"])
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 404)
         self.assertEqual(
             Movie.objects.all().count(),
             0
@@ -67,9 +101,8 @@ class MovieTestCase(TestCase):
         self.post_movie(titles)
 
         year = "1997"
-        url = '/movies/?year={}/'.format(year)
+        url = '/movies/?year={}'.format(year)
         response = self.client.get(url)
-
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             Movie.objects.filter(data__year=year).count(),
@@ -81,7 +114,7 @@ class MovieTestCase(TestCase):
         self.post_movie(titles)
 
         order_by = "data__title"
-        url = '/movies/?order_by={}'.format(order_by)
+        url = '/movies/?ordering={}'.format(order_by)
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 200)
@@ -90,23 +123,13 @@ class MovieTestCase(TestCase):
             response.data[0]['movie_id']
         )
 
-    def test_movie_get_order_by_field_not_exist(self):
-        titles = ["Titanic", "Fight Club", "Atlas"]
-        self.post_movie(titles)
-
-        order_by = "field_not_exist"
-        url = '/movies/?order_by={}'.format(order_by)
-        response = self.client.get(url)
-
-        self.assertEqual(response.status_code, 400)
-
     def test_movie_get_order_by_and_year(self):
         titles = ["Deadpool 2", "Black Panther", "Titanic"]
         self.post_movie(titles)
 
         order_by = "data__title"
         year = "2018"
-        url = '/movies/?order_by={}&year={}'.format(order_by, year)
+        url = '/movies/?ordering={}&year={}'.format(order_by, year)
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 200)
@@ -161,7 +184,7 @@ class CommentTestCase(TestCase):
         text = "The best movie ever!"
         response = self.post_comment(movie_id, text)
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
         self.assertEqual(
             Comment.objects.filter(text=text).count(),
             1
@@ -206,7 +229,7 @@ class CommentTestCase(TestCase):
                 self.post_comment(movie_id, text)
 
         movie_id = Movie.objects.get(data__title=titles[0]).movie_id
-        url = '/comments/{}/'.format(movie_id)
+        url = '/comments/?movie_id={}'.format(movie_id)
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 200)

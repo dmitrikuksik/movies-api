@@ -14,7 +14,12 @@ class MovieViewSet(mixins.ListModelMixin,
 
     queryset = Movie.objects.all().order_by('movie_id')
     filter_class = MovieFilter
-    ordering_fields = ('movie_id', 'data__year', 'data__imdbrating')
+    ordering_fields = (
+        'movie_id',
+        'data__year',
+        'data__imdbrating',
+        'data__title',
+    )
 
     def get_serializer_class(self):
         if self.request.method == 'POST':

@@ -1,7 +1,7 @@
 from django.conf import settings
 from rest_framework import serializers
 from .models import Movie, Comment
-from omdb.omdb import OMDBClient
+from .utils import OMDBClient
 
 
 class MovieTitleSerializer(serializers.Serializer):
