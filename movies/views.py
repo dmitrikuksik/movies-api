@@ -1,10 +1,13 @@
-from .serializers import *
+from .serializers import (
+  MovieSerializer,
+  MovieTitleSerializer,
+  CommentSerializer
+)
 from .models import Movie, Comment
 from .filters import MovieFilter
 
 from rest_framework.response import Response
 from rest_framework import status, viewsets, mixins
-from django_filters.rest_framework import DjangoFilterBackend
 
 
 class MovieViewSet(mixins.ListModelMixin,
